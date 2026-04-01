@@ -1,18 +1,17 @@
 const std = @import("std");
 const builtin = @import("builtin");
+const build_io = std.Options.debug_io;
 
 pub const PROTOC_VERSION = "32.1";
 
 // File system utilities
 pub fn dirExists(path: []const u8) bool {
-    var dir = std.fs.openDirAbsolute(path, .{}) catch return false;
-    dir.close();
+    _ = std.Io.Dir.openAbsolute(build_io, path, .{}) catch return false;
     return true;
 }
 
 pub fn fileExists(path: []const u8) bool {
-    var file = std.fs.openFileAbsolute(path, .{}) catch return false;
-    file.close();
+    _ = std.Io.Dir.openFileAbsolute(build_io, path, .{}) catch return false;
     return true;
 }
 
@@ -181,7 +180,7 @@ pub const RunProtocStep = struct {
                     &.{ "--zig_out=", absolute_dest_dir },
                 ));
                 if (!dirExists(absolute_dest_dir)) {
-                    try std.fs.makeDirAbsolute(absolute_dest_dir);
+                    std.Io.Dir.makeDirAbsolute(build_io, absolute_dest_dir) catch {};
                 }
 
                 for (self.include_directories) |it| {
