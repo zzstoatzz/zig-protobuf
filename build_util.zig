@@ -6,12 +6,14 @@ pub const PROTOC_VERSION = "32.1";
 
 // File system utilities
 pub fn dirExists(path: []const u8) bool {
-    _ = std.Io.Dir.openAbsolute(build_io, path, .{}) catch return false;
+    const dir = std.Io.Dir.openDirAbsolute(build_io, path, .{}) catch return false;
+    dir.close(build_io);
     return true;
 }
 
 pub fn fileExists(path: []const u8) bool {
-    _ = std.Io.Dir.openFileAbsolute(build_io, path, .{}) catch return false;
+    const file = std.Io.Dir.openFileAbsolute(build_io, path, .{}) catch return false;
+    file.close(build_io);
     return true;
 }
 
@@ -180,7 +182,7 @@ pub const RunProtocStep = struct {
                     &.{ "--zig_out=", absolute_dest_dir },
                 ));
                 if (!dirExists(absolute_dest_dir)) {
-                    std.Io.Dir.makeDirAbsolute(build_io, absolute_dest_dir) catch {};
+                    std.Io.Dir.createDirAbsolute(build_io, absolute_dest_dir, .{}) catch {};
                 }
 
                 for (self.include_directories) |it| {
