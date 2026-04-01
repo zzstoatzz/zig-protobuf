@@ -203,7 +203,7 @@ pub const RunProtocStep = struct {
                     std.debug.print("\n", .{});
                 }
 
-                _ = try step.evalChildProcess(argv.items);
+                _ = try step.captureChildProcess(argv.items);
             }
         }
 
@@ -214,7 +214,7 @@ pub const RunProtocStep = struct {
             try argv.append(b.allocator, "fmt");
             try argv.append(b.allocator, absolute_dest_dir);
 
-            _ = try step.evalChildProcess(argv.items);
+            _ = try step.captureChildProcess(argv.items);
         }
     }
 };
