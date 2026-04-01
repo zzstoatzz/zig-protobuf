@@ -182,7 +182,7 @@ pub const RunProtocStep = struct {
                     &.{ "--zig_out=", absolute_dest_dir },
                 ));
                 if (!dirExists(absolute_dest_dir)) {
-                    std.Io.Dir.createDirAbsolute(build_io, absolute_dest_dir, .{}) catch {};
+                    std.Io.Dir.createDirAbsolute(build_io, absolute_dest_dir, .default_dir) catch {};
                 }
 
                 for (self.include_directories) |it| {
